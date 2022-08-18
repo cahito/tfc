@@ -2,13 +2,16 @@ import { Request, Response } from 'express';
 import ILogin from '../interfaces/ILogin';
 import AuthService from '../services/AuthService';
 
-export default class AuthController {
-  constructor(private authService: AuthService) { }
+class AuthController {
+  constructor(private authService = new AuthService()) { }
 
   async login(req: Request, res: Response): Promise<void> {
-    const { username, password } = req.body as ILogin;
-    const token: string = this.authService.login(req.body);
+    const payload = req.body as ILogin;
+    console.log('payload no controller', payload);
+    const token: string = this.authService.login(payload);
 
-    res.status(200).json(token);
+    res.status(200).json({ token });
   }
 }
+
+export default AuthController;
