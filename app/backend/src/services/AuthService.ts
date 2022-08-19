@@ -5,10 +5,9 @@ import 'dotenv/config';
 const JWT_SECRET = process.env.JWT_SECRET || 'jwt_secret';
 
 class AuthService {
-  // constructor() { }
-  login = (payload: ILogin) => {
+  static login = (payload: ILogin) => {
     const token = jwt.sign(payload, JWT_SECRET);
-    console.log('token no service', token);
+
     return token;
   };
 }

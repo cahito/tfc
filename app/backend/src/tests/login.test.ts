@@ -1,7 +1,7 @@
 import * as sinon from 'sinon';
 import * as chai from 'chai';
 // @ts-ignore
-import chaiHttp from 'chai-http';
+import chaiHttp = require('chai-http');
 
 import { app } from '../app';
 
@@ -10,7 +10,10 @@ import {
   tokenMock,
   emailLessMock,
   allFieldsMustBeFilled,
+  passwordLessMock,
 } from './data'
+import AuthService from '../services/AuthService';
+import { afterEach, beforeEach } from 'mocha';
 
 chai.use(chaiHttp);
 
@@ -18,6 +21,14 @@ const { expect } = chai;
 
 describe('Login', () => {
   describe('Quando receber os parâmetros "email" e "password"', () => {
+    beforeEach(() => {
+      sinon.stub(AuthService, 'login').resolves(tokenMock);
+    })
+
+    afterEach(() => {
+      sinon.restore()
+    })
+
     it('retorna status 200', async () => {
       const response = await chai.request(app)
         .post('/login')
@@ -31,8 +42,7 @@ describe('Login', () => {
         .post('/login')
         .send(loginMock)
 
-      expect(response).to.have.property('json')
-      expect(response).property('json').to.be.eq({ tokenMock })
+      expect(response.text).to.be.eq(JSON.stringify({ token: tokenMock }))
     })
   })
 
@@ -45,13 +55,30 @@ describe('Login', () => {
       expect(response.status).to.be.eq(400)
     })
 
-    it('restorna a mensagem ""', async () => {
+    it('retorna uma mensagem de erro', async () => {
       const response = await chai.request(app)
       .post('/login')
       .send(emailLessMock)
 
-      expect(response).to.have.property('json')
-      expect(response).property('json').to.be.eq(allFieldsMustBeFilled)
+      expect(response.text).to.be.eq(JSON.stringify({ message: allFieldsMustBeFilled }))
+    })
+  })
+
+  describe('Quando não receber o parâmetro "password"', () => {
+    it('retorna o status 400', async () => {
+      const response = await chai.request(app)
+      .post('/login')
+      .send(passwordLessMock)
+
+      expect(response.status).to.be.eq(400)
+    })
+
+    it('retorna uma mensagem de erro', async () => {
+      const response = await chai.request(app)
+      .post('/login')
+      .send(passwordLessMock)
+
+      expect(response.text).to.be.eq(JSON.stringify({ message: allFieldsMustBeFilled }))
     })
   })
   /**
