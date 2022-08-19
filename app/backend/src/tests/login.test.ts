@@ -11,6 +11,9 @@ import {
   emailLessMock,
   allFieldsMustBeFilled,
   passwordLessMock,
+  incorrectEmailOrPassword,
+  invalidEmail,
+  invalidPassword,
 } from './data'
 import AuthService from '../services/AuthService';
 import { afterEach, beforeEach } from 'mocha';
@@ -20,7 +23,7 @@ chai.use(chaiHttp);
 const { expect } = chai;
 
 describe('Login', () => {
-  describe('Quando receber os parâmetros "email" e "password"', () => {
+  describe('1 - Quando receber os parâmetros "email" e "password"', () => {
     beforeEach(() => {
       sinon.stub(AuthService, 'login').returns(tokenMock as string);
     })
@@ -46,7 +49,7 @@ describe('Login', () => {
     })
   })
 
-  describe('Quando não receber o parâmetro "email"', () => {
+  describe('2 - Quando não receber o parâmetro "email"', () => {
     it('retorna o status 400', async () => {
       const response = await chai.request(app)
       .post('/login')
@@ -64,7 +67,7 @@ describe('Login', () => {
     })
   })
 
-  describe('Quando não receber o parâmetro "password"', () => {
+  describe('3 - Quando não receber o parâmetro "password"', () => {
     it('retorna o status 400', async () => {
       const response = await chai.request(app)
       .post('/login')
@@ -79,6 +82,40 @@ describe('Login', () => {
       .send(passwordLessMock)
 
       expect(response.text).to.be.eq(JSON.stringify({ message: allFieldsMustBeFilled }))
+    })
+  })
+
+  describe('4 - Quando receber algum parâmetro inválido', () => {
+    it('retorna o status 401 com "email" inválido', async () => {
+      const response = await chai.request(app)
+      .post('/login')
+      .send(invalidEmail)
+
+      expect(response.status).to.be.eq(401)
+    })
+
+    it('retorna uma mensagem de erro com "email" inválido', async () => {
+      const response = await chai.request(app)
+      .post('/login')
+      .send(invalidEmail)
+
+      expect(response.text).to.be.eq(JSON.stringify({ message: incorrectEmailOrPassword }))
+    })
+
+    it('retorna o status 401 com "password" inválido', async () => {
+      const response = await chai.request(app)
+      .post('/login')
+      .send(invalidPassword)
+
+      expect(response.status).to.be.eq(401)
+    })
+
+    it('retorna uma mensagem de erro com "password" inválido', async () => {
+      const response = await chai.request(app)
+      .post('/login')
+      .send(invalidPassword)
+
+      expect(response.text).to.be.eq(JSON.stringify({ message: incorrectEmailOrPassword }))
     })
   })
   /**
