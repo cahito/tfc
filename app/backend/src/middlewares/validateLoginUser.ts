@@ -8,16 +8,13 @@ const validateLoginUser = async (req: Request, _res: Response, next: NextFunctio
   const users: IUser[] = await UserService.list();
   const validEmail = users.some((user) => user.email === email);
   const validPassword = users.some((user) => user.password === password);
-  console.log('users no validateLoginUser: ', users);
-  console.log('validEmail: ', validEmail);
-  console.log('validPassword: ', validPassword);
-  if (validEmail && validPassword) {
-    next();
+  if (!validEmail || !validPassword) {
+    const err = new Error('Incorrect email or password');
+    err.name = ReasonPhrases.UNAUTHORIZED;
+    throw err;
   }
 
-  const err = new Error('Incorrect email or password');
-  err.name = ReasonPhrases.UNAUTHORIZED;
-  return err;
+  next();
 };
 
 export default validateLoginUser;
