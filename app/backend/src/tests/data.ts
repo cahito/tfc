@@ -1,4 +1,22 @@
-import ILogin from "../interfaces/ILogin"
+import ILogin from '../interfaces/ILogin'
+import IUser from '../interfaces/IUser'
+
+export const usersMock: IUser[] = [
+  {
+  id: 1,
+  username: 'Admin',
+  role: 'admin',
+  email: 'email@email.com',
+  password: 'senha123',
+  },
+  {
+    id: 2,
+    username: 'User',
+    role: 'user',
+    email: 'user@email.com',
+    password: 'senha456',
+    },
+]
 
 export const loginMock: ILogin = {
   email: 'email@email.com',
@@ -23,6 +41,16 @@ export const invalidEmail = {
 export const invalidPassword = {
   email: 'email@email.com',
   password: 1234567,
+}
+
+export const wrongEmail = {
+  email: 'wrong@email.com',
+  password: 'senha123',
+}
+
+export const wrongPassword = {
+  email: 'email@email.com',
+  password: 'wrongSenha',
 }
 
 export const tokenMock: string = 'some_token'
