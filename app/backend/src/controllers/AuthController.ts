@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ReasonPhrases } from 'http-status-codes';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import ILogin from '../interfaces/ILogin';
 import AuthService from '../services/AuthService';
 
@@ -10,7 +10,7 @@ class AuthController {
     const payload = req.body as ILogin;
     const token: string = await AuthService.login(payload);
 
-    res.status(200).json({ token });
+    res.status(StatusCodes.OK).json({ token });
   };
 
   validate = async (req: Request, res: Response): Promise<void> => {
