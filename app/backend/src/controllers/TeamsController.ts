@@ -8,6 +8,13 @@ class TeamsController {
 
     res.status(StatusCodes.OK).json(teamsList);
   };
+
+  getById = async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params;
+    const team = await TeamsService.getById(id);
+
+    res.status(StatusCodes.OK).json(team);
+  };
 }
 
 export default TeamsController;
