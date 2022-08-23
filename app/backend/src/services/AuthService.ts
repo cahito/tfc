@@ -1,23 +1,25 @@
 import * as jwt from 'jsonwebtoken';
 import ILogin from '../interfaces/ILogin';
 import 'dotenv/config';
+import getUsers from '../middlewares/getUsers';
+// import validateLoginUser from '../middlewares/validateLoginUser';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'jwt_secret';
 
 class AuthService {
-  login = (payload: ILogin) => {
-    const token = jwt.sign(payload, JWT_SECRET);
+  static login = async (payload: ILogin) => {
+    const token = jwt.sign(payload.email, JWT_SECRET);
     console.log('token no service', token);
     return token;
   };
 
-  validate = async (token: string) => {
-    const data = jwt.decode(token);
+  static validate = async (token: string) => {
+    const data = jwt.decode(token) as ILogin;
+    const users = await getUsers();
+    const loginUser = users.find((user) => user.email === data.email);
+    const role = loginUser?.role;
 
-    console.log('data no AuthService: ', data);
-
-    const result = 'ok';
-    return result;
+    return role;
   };
 }
 

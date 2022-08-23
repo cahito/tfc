@@ -29,7 +29,7 @@ const { expect } = chai;
 describe('Login', () => {
   describe('1 - Quando receber os parâmetros "email" e "password"', () => {
     beforeEach(() => {
-      sinon.stub(AuthService, 'login').returns(tokenMock as string)
+      sinon.stub(AuthService, 'login').resolves(tokenMock)
       sinon.stub(UserService, 'list').resolves(usersMock);
     })
 

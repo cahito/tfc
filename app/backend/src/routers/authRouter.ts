@@ -1,18 +1,17 @@
 import { Router } from 'express';
-// import validateToken from '../middlewares/validateToken';
 import validateLogin from '../middlewares/validateLogin';
+// import validateLoginUser from '../middlewares/validateLoginUser';
 import AuthController from '../controllers/AuthController';
-import AuthService from '../services/AuthService';
 
 const router = Router();
-const authService = new AuthService();
-const authController = new AuthController(authService);
+const authController = new AuthController();
 
 router.post(
   '/login',
   validateLogin,
+  // validateLoginUser,
   authController.login,
 );
-// router.get('/login/validate', AuthController.validate);
+router.get('/login/validate', authController.validate);
 
 export default router;
