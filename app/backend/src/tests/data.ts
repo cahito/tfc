@@ -55,6 +55,21 @@ export const wrongPassword = {
 
 export const tokenMock: string = 'some_token'
 
+export const teamsMock = [
+  {
+    id: 1,
+    teamName: "Águia do Vale"
+  },
+  {
+    id: 2,
+    teamName: "Burro da Central"
+  },
+  {
+    id: 3,
+    teamName: "Xis Vê"
+  },
+]
+
 export const allFieldsMustBeFilled: string = 'All fields must be filled'
 
 export const incorrectEmailOrPassword: string = 'Incorrect email or password'

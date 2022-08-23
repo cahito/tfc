@@ -16,6 +16,7 @@ class TeamsService {
       err.name = ReasonPhrases.BAD_REQUEST;
       throw err;
     }
+
     return team;
   }
 }
