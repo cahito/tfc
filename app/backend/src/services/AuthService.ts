@@ -16,9 +16,7 @@ class AuthService {
     const data = jwt.decode(token) as ILogin;
     const users = await getUsers();
     const loginUser = users.find((user) => user.email === data.email);
-    console.log(loginUser);
     const role = loginUser?.role;
-    console.log(role);
     return role;
   };
 }
