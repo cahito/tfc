@@ -16,5 +16,6 @@ router.post(
   matchesController.create,
 );
 router.patch('/:id/finish', matchesController.endGame);
+router.patch('/:id', matchesController.updateScore);
 
 export default router;

@@ -23,6 +23,14 @@ class MatchesController {
 
     res.status(StatusCodes.OK).json({ message: finished });
   };
+
+  updateScore = async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params;
+    const payload = req.body;
+    const result = await MatchesService.updateScore(id, payload);
+
+    res.status(StatusCodes.OK).json(!!result);
+  };
 }
 
 export default MatchesController;

@@ -48,6 +48,20 @@ class MatchesService {
     console.log(result);
     return 'ok';
   }
+
+  static async updateScore(id: string, payload: IMatch): Promise<number> {
+    const { homeTeamGoals, awayTeamGoals } = payload;
+    const [result] = await Match.update({
+      homeTeamGoals: Number(homeTeamGoals),
+      awayTeamGoals: Number(awayTeamGoals),
+    }, {
+      where: {
+        id: Number(id),
+      },
+    });
+
+    return result;
+  }
 }
 
 export default MatchesService;
