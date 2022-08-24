@@ -7,6 +7,6 @@ const matchesController = new MatchesController();
 
 router.get('/', matchesController.list);
 router.post('/', validateToken, matchesController.create);
-// router.get('/matches/:id', matchesController.getById);
+router.patch('/:id/finish', matchesController.endGame);
 
 export default router;

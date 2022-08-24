@@ -16,6 +16,13 @@ class MatchesController {
 
     res.status(StatusCodes.CREATED).json(match);
   };
+
+  endGame = async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params;
+    const finished = await MatchesService.endGame(id);
+
+    res.status(StatusCodes.OK).json({ message: finished });
+  };
 }
 
 export default MatchesController;
