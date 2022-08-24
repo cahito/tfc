@@ -16,9 +16,9 @@ class App {
     // Não remover essa rota
     this.app.get('/', (req, res) => res.json({ ok: true }));
 
-    this.app.use(authRouter);
-    this.app.use(teamsRouter);
-    this.app.use(matchesRouter);
+    this.app.use('/login', authRouter);
+    this.app.use('/teams', teamsRouter);
+    this.app.use('/matches', matchesRouter);
 
     this.app.use(errorMiddleware);
   }
