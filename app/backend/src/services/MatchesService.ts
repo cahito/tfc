@@ -5,7 +5,6 @@ import IMatch from '../interfaces/IMatch';
 
 class MatchesService {
   static async list(inProgress: any): Promise<IMatch[]> {
-    console.log('inProgress no Service: ', inProgress);
     const matches: IMatch[] = await Match.findAll({
       include: [
         { model: db.models.teams, as: 'teamHome', attributes: { exclude: ['id'] } },
@@ -22,19 +21,22 @@ class MatchesService {
         inProgress: (inProgress === 'true' ? 1 : 0),
       },
     });
+
     return result;
   }
 
-  /* static async getById(id: string): Promise<IMatch> {
-    const match: IMatch | null = await Match.findByPk(Number(id));
-    if (!match) {
-      const err = new Error('Not a valid match');
-      err.name = ReasonPhrases.BAD_REQUEST;
-      throw err;
-    }
+  static async create(payload: IMatch): Promise<IMatch> {
+    const { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals } = payload;
+    const match = await Match.create({
+      homeTeam,
+      awayTeam,
+      homeTeamGoals,
+      awayTeamGoals,
+      inProgress: true,
+    });
 
     return match;
-  } */
+  }
 }
 
 export default MatchesService;

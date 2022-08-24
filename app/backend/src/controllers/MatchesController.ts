@@ -10,12 +10,12 @@ class MatchesController {
     res.status(StatusCodes.OK).json(matchesList);
   };
 
-  /* getById = async (req: Request, res: Response): Promise<void> => {
-    const { id } = req.params;
-    const match = await MatchesService.getById(id);
+  create = async (req: Request, res: Response): Promise<void> => {
+    const payload = req.body;
+    const match = await MatchesService.create(payload);
 
-    res.status(StatusCodes.OK).json(match);
-  }; */
+    res.status(StatusCodes.CREATED).json(match);
+  };
 }
 
 export default MatchesController;
