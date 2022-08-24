@@ -1,6 +1,7 @@
-import { INTEGER, Model } from 'sequelize';
+import { BOOLEAN, INTEGER, Model } from 'sequelize';
 import db from '.';
 import IMatch from '../../interfaces/IMatch';
+import Team from './team';
 
 class Match extends Model implements IMatch {
   public id!: number;
@@ -35,14 +36,17 @@ Match.init({
     allowNull: false,
   },
   inProgress: {
-    type: INTEGER,
+    type: BOOLEAN,
     allowNull: false,
   },
 }, {
   underscored: true,
   sequelize: db,
-  modelName: 'matchs',
+  modelName: 'matches',
   timestamps: false,
 });
+
+Match.belongsTo(Team, { foreignKey: 'homeTeam', as: 'teamHome' });
+Match.belongsTo(Team, { foreignKey: 'awayTeam', as: 'teamAway' });
 
 export default Match;
