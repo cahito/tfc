@@ -16,7 +16,7 @@ const validateToken = async (req: Request, _res: Response, next: NextFunction) =
     const validToken = jwt.verify(token, JWT_SECRET);
     if (validToken) next();
   } catch (error) {
-    const err = new Error('Invalid token provided');
+    const err = new Error('Token must be a valid token');
     err.name = ReasonPhrases.UNAUTHORIZED;
     throw err;
   }
