@@ -46,7 +46,7 @@ class MatchesService {
     });
 
     console.log(result);
-    return 'ok';
+    return 'Finished';
   }
 
   static async updateScore(id: string, payload: IMatch): Promise<number> {
