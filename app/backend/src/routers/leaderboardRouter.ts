@@ -8,6 +8,7 @@ const router = Router();
 const leaderboardController = new LeaderboardController();
 
 router.get('/home', leaderboardController.endedHome);
+router.get('/away', leaderboardController.endedAway);
 /* router.post(
   '/',
   validateToken,

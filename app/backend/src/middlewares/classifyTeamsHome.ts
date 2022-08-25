@@ -80,7 +80,7 @@ const putInOrder = (payload: ILeaderboard[]) => {
   return result;
 };
 
-const classifyTeams = (payload: Match[], data: Team[]) => {
+const classifyTeamsHome = (payload: Match[], data: Team[]) => {
   const teamsResults: ILeaderboard[] = data.map((team) => {
     const teamMatches = payload.filter((match) => match.homeTeam === team.id);
     return {
@@ -101,4 +101,4 @@ const classifyTeams = (payload: Match[], data: Team[]) => {
   return result;
 };
 
-export default classifyTeams;
+export default classifyTeamsHome;

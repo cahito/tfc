@@ -1,6 +1,7 @@
 import Team from '../database/models/team';
 import Match from '../database/models/match';
-import classifyTeams from '../middlewares/classifyTeams';
+import classifyTeamsHome from '../middlewares/classifyTeamsHome';
+import classifyTeamsAway from '../middlewares/classifyTeamsAway';
 
 class LeaderboardService {
   static endedHome = async () => {
@@ -9,7 +10,18 @@ class LeaderboardService {
       where: { inProgress: 0 },
     });
     const teams = await Team.findAll();
-    const result = classifyTeams(endedHomeMatches, teams);
+    const result = classifyTeamsHome(endedHomeMatches, teams);
+
+    return result;
+  };
+
+  static endedAway = async () => {
+    const endedAwayMatches = await Match.findAll({
+      attributes: { exclude: ['id'] },
+      where: { inProgress: 0 },
+    });
+    const teams = await Team.findAll();
+    const result = classifyTeamsAway(endedAwayMatches, teams);
 
     return result;
   };

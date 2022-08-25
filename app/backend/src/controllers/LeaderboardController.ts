@@ -8,6 +8,12 @@ class LeaderboardController {
 
     res.status(StatusCodes.OK).json(homeEndedBoard);
   };
+
+  endedAway = async (req: Request, res: Response): Promise<void> => {
+    const awayEndedBoard = await LeaderboardService.endedAway();
+
+    res.status(StatusCodes.OK).json(awayEndedBoard);
+  };
 }
 
 export default LeaderboardController;
