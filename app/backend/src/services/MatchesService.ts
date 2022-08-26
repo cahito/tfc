@@ -1,4 +1,3 @@
-// import { Op } from 'sequelize';
 import db from '../database/models';
 import Match from '../database/models/match';
 import IMatch from '../interfaces/IMatch';

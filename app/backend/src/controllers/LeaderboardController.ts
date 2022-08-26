@@ -14,6 +14,12 @@ class LeaderboardController {
 
     res.status(StatusCodes.OK).json(awayEndedBoard);
   };
+
+  general = async (req: Request, res: Response): Promise<void> => {
+    const generalBoard = await LeaderboardService.general();
+
+    res.status(StatusCodes.OK).json(generalBoard);
+  };
 }
 
 export default LeaderboardController;

@@ -4,8 +4,6 @@ import ILogin from '../interfaces/ILogin';
 import AuthService from '../services/AuthService';
 
 class AuthController {
-  // constructor(private authService: AuthService) { }
-
   login = async (req: Request, res: Response): Promise<void> => {
     const payload = req.body as ILogin;
     const token: string = await AuthService.login(payload);
