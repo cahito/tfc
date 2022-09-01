@@ -6,17 +6,6 @@ import chaiHttp = require('chai-http');
 import { app } from '../app';
 
 import {
-  loginMock,
-  tokenMock,
-  emailLessMock,
-  allFieldsMustBeFilled,
-  passwordLessMock,
-  incorrectEmailOrPassword,
-  invalidEmail,
-  invalidPassword,
-  wrongEmail,
-  wrongPassword,
-  usersMock,
   teamsMock,
 } from './data'
 import { afterEach, beforeEach } from 'mocha';
@@ -48,7 +37,7 @@ describe('Teams', () => {
       const response = await chai.request(app)
       .get('/teams')
 
-      expect(response.text).to.be.eq(JSON.stringify(teamsMock))
+      expect(response.body).to.be.eql(teamsMock)
     })
   })
 
@@ -70,7 +59,7 @@ describe('Teams', () => {
       const response = await chai.request(app)
       .get('/teams/2')
 
-      expect(response.text).to.be.eq(JSON.stringify(teamsMock[1]))
+      expect(response.body).to.be.eql(teamsMock[1])
     })
 
     it('retorna status 400 caso o time não esteja cadastrado', async () => {
@@ -86,11 +75,7 @@ describe('Teams', () => {
       const response = await chai.request(app)
       .get('/teams/999')
 
-      expect(response.text).to.be.eq(JSON.stringify({ message: 'Not a valid team' }))
+      expect(response.body).to.be.eql({ message: 'Not a valid team' })
     })
   })
-
-  /* describe('2 - Quando for feita a requisição na rota "/teams/:id"', () => {
-
-  }) */
 })
