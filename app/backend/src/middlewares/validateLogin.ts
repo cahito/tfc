@@ -13,6 +13,11 @@ const validateLogin = async (req: Request, _res: Response, next: NextFunction) =
     err.name = ReasonPhrases.BAD_REQUEST;
     throw err;
   }
+  if (typeof email !== 'string' || typeof password !== 'string') {
+    const err = new Error('Incorrect email or password');
+    err.name = ReasonPhrases.UNAUTHORIZED;
+    throw err;
+  }
 
   next();
 };

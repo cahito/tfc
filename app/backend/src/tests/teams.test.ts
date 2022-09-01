@@ -19,9 +19,9 @@ import {
   usersMock,
   teamsMock,
 } from './data'
-import TeamService from '../services/TeamService';
 import { afterEach, beforeEach } from 'mocha';
 import { StatusCodes } from 'http-status-codes';
+import Team from '../database/models/team';
 
 chai.use(chaiHttp);
 
@@ -30,7 +30,7 @@ const { expect } = chai;
 describe('Teams', () => {
   describe('1 - Quando for feita a requisiçao na rota "/teams"', () => {
     beforeEach(() => {
-      sinon.stub(TeamService, 'list').resolves(teamsMock)
+      sinon.stub(Team, 'findAll').resolves(teamsMock as Team[])
     })
 
     afterEach(() => {
@@ -58,7 +58,7 @@ describe('Teams', () => {
     })
 
     it('retorna status 200', async () => {
-      sinon.stub(TeamService, 'getById').withArgs('2').resolves(teamsMock[1])
+      sinon.stub(Team, 'findByPk').withArgs(2).resolves(teamsMock[1] as Team)
       const response = await chai.request(app)
       .get('/teams/2')
 
@@ -66,27 +66,31 @@ describe('Teams', () => {
     })
 
     it('retorna um array com os times cadastrados', async () => {
-      sinon.stub(TeamService, 'getById').withArgs('2').resolves(teamsMock[1])
+      sinon.stub(Team, 'findByPk').withArgs(2).resolves(teamsMock[1] as Team)
       const response = await chai.request(app)
       .get('/teams/2')
 
       expect(response.text).to.be.eq(JSON.stringify(teamsMock[1]))
     })
 
-    it.skip('retorna status 400 caso o time não esteja cadastrado', async () => {
-      sinon.stub(TeamService, 'getById').withArgs('999').throws(new Error('Not a valid team'))
+    it('retorna status 400 caso o time não esteja cadastrado', async () => {
+      sinon.stub(Team, 'findByPk').withArgs(999).resolves(null)
       const response = await chai.request(app)
       .get('/teams/999')
 
     expect(response.status).to.be.eq(StatusCodes.BAD_REQUEST)
     })
 
-    it.skip('retorna um erro "Not a valid team" caso o time não esteja cadastrado', async () => {
-      sinon.stub(TeamService, 'getById').withArgs('999').throws(new Error('Not a valid team'))
+    it('retorna um erro "Not a valid team" caso o time não esteja cadastrado', async () => {
+      sinon.stub(Team, 'findByPk').withArgs(999).resolves(null)
       const response = await chai.request(app)
       .get('/teams/999')
 
-      expect(response.text).to.be.eq('')
+      expect(response.text).to.be.eq(JSON.stringify({ message: 'Not a valid team' }))
     })
   })
+
+  /* describe('2 - Quando for feita a requisição na rota "/teams/:id"', () => {
+
+  }) */
 })

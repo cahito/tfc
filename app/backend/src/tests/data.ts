@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcryptjs';
 import ILogin from '../interfaces/ILogin'
 import IUser from '../interfaces/IUser'
 
@@ -7,14 +8,14 @@ export const usersMock: IUser[] = [
   username: 'Admin',
   role: 'admin',
   email: 'email@email.com',
-  password: 'senha123',
+  password: '$2a$08$xi.Hxk1czAO0nZR..B393umDaBmjKccSa.pIehlSJgkdMPLy5BNhm',
   },
   {
     id: 2,
     username: 'User',
     role: 'user',
     email: 'user@email.com',
-    password: 'senha456',
+    password: '$2a$08$xi.Hxk1czAO0nZR..B393uobLruTGFq82Mpi1xhy5iqbRfbyzhinK',
     },
 ]
 
@@ -73,3 +74,7 @@ export const teamsMock = [
 export const allFieldsMustBeFilled: string = 'All fields must be filled'
 
 export const incorrectEmailOrPassword: string = 'Incorrect email or password'
+
+export const noTokenProvided: string = 'No token provided'
+
+export const invalidToken: string = 'Token must be a valid token'

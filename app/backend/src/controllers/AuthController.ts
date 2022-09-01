@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import ILogin from '../interfaces/ILogin';
 import AuthService from '../services/AuthService';
 
@@ -12,12 +12,12 @@ class AuthController {
   };
 
   validate = async (req: Request, res: Response): Promise<void> => {
-    const token = req?.headers?.authorization;
-    if (!token) {
+    const token = req.headers.authorization as string;
+    /* if (!token) {
       const err = new Error('No token provided');
       err.name = ReasonPhrases.UNAUTHORIZED;
       throw err;
-    }
+    } */
     const role = await AuthService.validate(token);
 
     res.status(200).json({ role });

@@ -17,10 +17,13 @@ import {
   wrongEmail,
   wrongPassword,
   usersMock,
+  noTokenProvided,
+  invalidToken,
 } from './data'
-import AuthService from '../services/AuthService';
-import UserService from '../services/UserService';
+import * as jwt from 'jsonwebtoken';
 import { afterEach, beforeEach } from 'mocha';
+import User from '../database/models/user';
+import { StatusCodes } from 'http-status-codes';
 
 chai.use(chaiHttp);
 
@@ -29,8 +32,8 @@ const { expect } = chai;
 describe('Login', () => {
   describe('1 - Quando receber os parâmetros "email" e "password"', () => {
     beforeEach(() => {
-      sinon.stub(AuthService, 'login').resolves(tokenMock)
-      sinon.stub(UserService, 'list').resolves(usersMock);
+      sinon.stub(jwt, 'sign').resolves(tokenMock)
+      sinon.stub(User, 'findAll').resolves(usersMock as User[])
     })
 
     afterEach(() => {
@@ -42,7 +45,7 @@ describe('Login', () => {
         .post('/login')
         .send(loginMock)
 
-      expect(response.status).to.be.eq(200)
+      expect(response.status).to.be.eq(StatusCodes.OK)
     })
 
     it('retorna um token', async () => {
@@ -50,7 +53,7 @@ describe('Login', () => {
         .post('/login')
         .send(loginMock)
 
-      expect(response.text).to.be.eq(JSON.stringify({ token: tokenMock }))
+      expect(response.body).to.be.eql({ token: tokenMock })
     })
   })
 
@@ -60,7 +63,7 @@ describe('Login', () => {
         .post('/login')
         .send(emailLessMock)
 
-      expect(response.status).to.be.eq(400)
+      expect(response.status).to.be.eq(StatusCodes.BAD_REQUEST)
     })
 
     it('retorna uma mensagem de erro', async () => {
@@ -68,7 +71,7 @@ describe('Login', () => {
         .post('/login')
         .send(emailLessMock)
 
-      expect(response.text).to.be.eq(JSON.stringify({ message: allFieldsMustBeFilled }))
+      expect(response.body).to.be.eql({ message: allFieldsMustBeFilled })
     })
   })
 
@@ -78,7 +81,7 @@ describe('Login', () => {
         .post('/login')
         .send(passwordLessMock)
 
-      expect(response.status).to.be.eq(400)
+      expect(response.status).to.be.eq(StatusCodes.BAD_REQUEST)
     })
 
     it('retorna uma mensagem de erro', async () => {
@@ -86,7 +89,7 @@ describe('Login', () => {
         .post('/login')
         .send(passwordLessMock)
 
-      expect(response.text).to.be.eq(JSON.stringify({ message: allFieldsMustBeFilled }))
+      expect(response.body).to.be.eql({ message: allFieldsMustBeFilled })
     })
   })
 
@@ -96,7 +99,7 @@ describe('Login', () => {
         .post('/login')
         .send(invalidEmail)
 
-      expect(response.status).to.be.eq(401)
+      expect(response.status).to.be.eq(StatusCodes.UNAUTHORIZED)
     })
 
     it('retorna uma mensagem de erro com "email" inválido', async () => {
@@ -104,7 +107,7 @@ describe('Login', () => {
         .post('/login')
         .send(invalidEmail)
 
-      expect(response.text).to.be.eq(JSON.stringify({ message: incorrectEmailOrPassword }))
+      expect(response.body).to.be.eql({ message: incorrectEmailOrPassword })
     })
 
     it('retorna o status 401 com "password" inválido', async () => {
@@ -112,7 +115,7 @@ describe('Login', () => {
         .post('/login')
         .send(invalidPassword)
 
-      expect(response.status).to.be.eq(401)
+      expect(response.status).to.be.eq(StatusCodes.UNAUTHORIZED)
     })
 
     it('retorna uma mensagem de erro com "password" inválido', async () => {
@@ -120,13 +123,13 @@ describe('Login', () => {
         .post('/login')
         .send(invalidPassword)
 
-      expect(response.text).to.be.eq(JSON.stringify({ message: incorrectEmailOrPassword }))
+      expect(response.body).to.be.eql({ message: incorrectEmailOrPassword })
     })
   })
 
   describe('5 - Quando receber algum parâmetro errado', () => {
     beforeEach(() => {
-      sinon.stub(UserService, 'list').resolves(usersMock)
+      sinon.stub(User, 'findAll').resolves(usersMock as User[])
     })
 
     afterEach(() => {
@@ -138,7 +141,7 @@ describe('Login', () => {
         .post('/login')
         .send(wrongEmail)
 
-      expect(response.status).to.be.eq(401)
+      expect(response.status).to.be.eq(StatusCodes.UNAUTHORIZED)
     })
 
     it('retorna uma mensagem de erro com "email" errado', async () => {
@@ -146,7 +149,7 @@ describe('Login', () => {
         .post('/login')
         .send(wrongEmail)
 
-      expect(response.text).to.be.eq(JSON.stringify({ message: incorrectEmailOrPassword }))
+      expect(response.body).to.be.eql({ message: incorrectEmailOrPassword })
     })
 
     it('retorna o status 401 com "password" errado', async () => {
@@ -154,7 +157,7 @@ describe('Login', () => {
         .post('/login')
         .send(wrongPassword)
 
-      expect(response.status).to.be.eq(401)
+      expect(response.status).to.be.eq(StatusCodes.UNAUTHORIZED)
     })
 
     it('retorna uma mensagem de erro com "password" errado', async () => {
@@ -162,33 +165,45 @@ describe('Login', () => {
         .post('/login')
         .send(wrongPassword)
 
-      expect(response.text).to.be.eq(JSON.stringify({ message: incorrectEmailOrPassword }))
+      expect(response.body).to.be.eql({ message: incorrectEmailOrPassword })
     })
   })
-  /**
-   * Exemplo do uso de stubs com tipos
-   */
 
-  // let chaiHttpResponse: Response;
+  describe('6 - Quando acessar o caminho /validate', () => {
+    beforeEach(() => {
+      sinon.stub(User, 'findAll').resolves(usersMock as User[])
+      sinon.stub(jwt, 'decode').returns(loginMock)
+    })
 
-  // before(async () => {
-  //   sinon
-  //     .stub(Example, "findOne")
-  //     .resolves({
-  //       ...<Seu mock>
-  //     } as Example);
-  // });
+    afterEach(() => {
+      sinon.restore()
+    })
 
-  // after(()=>{
-  //   (Example.findOne as sinon.SinonStub).restore();
-  // })
+    it('retorna o "role" do usuário fazendo login', async () => {
+      sinon.stub(jwt, 'verify').resolves(loginMock)
+      const response = await chai.request(app)
+        .get('/login/validate')
+        .set('authorization', tokenMock)
 
-  // it('...', async () => {
-  //   chaiHttpResponse = await chai
-  //      .request(app)
-  //      ...
+      expect(response.body).to.be.eql({ role: 'admin'})
+    })
 
-  //   expect(...)
-  // });
+    it('retorna um erro quando o usuário não fornecer um token', async () => {
+      const response = await chai.request(app)
+        .get('/login/validate')
 
+      expect(response.status).to.be.eq(StatusCodes.UNAUTHORIZED)
+      expect(response.body).to.be.eql({ message: noTokenProvided})
+    })
+
+    it('retorna um erro quando o usuário fornecer um token que não é válido', async () => {
+      sinon.stub(jwt, 'verify').throws()
+      const response = await chai.request(app)
+        .get('/login/validate')
+        .set('authorization', 'invalid_token')
+
+      expect(response.status).to.be.eq(StatusCodes.UNAUTHORIZED)
+      expect(response.body).to.be.eql({ message: invalidToken})
+    })
+  })
 })
