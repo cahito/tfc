@@ -8,15 +8,6 @@ import { app } from '../app';
 import {
   loginMock,
   tokenMock,
-  emailLessMock,
-  allFieldsMustBeFilled,
-  passwordLessMock,
-  incorrectEmailOrPassword,
-  invalidEmail,
-  invalidPassword,
-  wrongEmail,
-  wrongPassword,
-  usersMock,
   teamsMock,
   matchesMock,
   matchesInProgress,
@@ -37,8 +28,6 @@ import * as jwt from 'jsonwebtoken';
 import { afterEach, beforeEach } from 'mocha';
 import { StatusCodes } from 'http-status-codes';
 import Match from '../database/models/match';
-import IMatches from '../interfaces/IMatches';
-import IMatch from '../interfaces/IMatch';
 import Team from '../database/models/team';
 
 chai.use(chaiHttp);
