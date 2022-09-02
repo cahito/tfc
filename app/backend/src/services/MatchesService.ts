@@ -4,18 +4,16 @@ import IMatch from '../interfaces/IMatch';
 
 class MatchesService {
   static async list(inProgress: any): Promise<IMatch[]> {
-    const matches: IMatch[] = await Match.findAll({
-      include: [
-        { model: db.models.teams, as: 'teamHome', attributes: { exclude: ['id'] } },
-        { model: db.models.teams, as: 'teamAway', attributes: { exclude: ['id'] } },
-      ],
-    });
-    if (inProgress === undefined) return matches;
+    if (inProgress === undefined) {
+      const matches: IMatch[] = await Match.findAll({
+        include: [{ model: db.models.teams, as: 'teamHome', attributes: { exclude: ['id'] } },
+          { model: db.models.teams, as: 'teamAway', attributes: { exclude: ['id'] } }],
+      });
+      return matches;
+    }
     const result: IMatch[] = await Match.findAll({
-      include: [
-        { model: db.models.teams, as: 'teamHome', attributes: { exclude: ['id'] } },
-        { model: db.models.teams, as: 'teamAway', attributes: { exclude: ['id'] } },
-      ],
+      include: [{ model: db.models.teams, as: 'teamHome', attributes: { exclude: ['id'] } },
+        { model: db.models.teams, as: 'teamAway', attributes: { exclude: ['id'] } }],
       where: {
         inProgress: (inProgress === 'true' ? 1 : 0),
       },
@@ -38,13 +36,12 @@ class MatchesService {
   }
 
   static async endGame(id: string): Promise<string> {
-    const result = await Match.update({ inProgress: 0 }, {
+    await Match.update({ inProgress: 0 }, {
       where: {
         id: Number(id),
       },
     });
 
-    console.log(result);
     return 'Finished';
   }
 

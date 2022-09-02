@@ -19,6 +19,7 @@ import {
   usersMock,
   noTokenProvided,
   invalidToken,
+  tokenMustBeValid,
 } from './data'
 import * as jwt from 'jsonwebtoken';
 import { afterEach, beforeEach } from 'mocha';
@@ -200,10 +201,10 @@ describe('Login', () => {
       sinon.stub(jwt, 'verify').throws()
       const response = await chai.request(app)
         .get('/login/validate')
-        .set('authorization', 'invalid_token')
+        .set('authorization', invalidToken)
 
       expect(response.status).to.be.eq(StatusCodes.UNAUTHORIZED)
-      expect(response.body).to.be.eql({ message: invalidToken})
+      expect(response.body).to.be.eql({ message: tokenMustBeValid})
     })
   })
 })
